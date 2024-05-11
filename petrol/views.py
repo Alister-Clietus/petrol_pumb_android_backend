@@ -111,9 +111,10 @@ def get_all_dispensers(request):
 
 @api_view(['POST'])
 def fuel_transaction_create(request):
-    if request.method == 'POST':
         serializer = FuelTransactionSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
+            print("Serializer not valid")
             username=serializer.validated_data['username']
             dispenser_id = serializer.validated_data['dispenser_id']
             fuel_type = serializer.validated_data['fuel_type']
@@ -133,10 +134,12 @@ def fuel_transaction_create(request):
             
 
             if fuel_type == 'petrol':
+                print("Is petrol")
                 if dispenser.petrol_stock < liters:
                     return Response({'error': 'Insufficient petrol stock'}, status=status.HTTP_400_BAD_REQUEST)
                 dispenser.petrol_stock -= liters
             elif fuel_type == 'diesel':
+                print("Is Diesel")
                 if dispenser.diesel_stock < liters:
                     return Response({'error': 'Insufficient diesel stock'}, status=status.HTTP_400_BAD_REQUEST)
                 dispenser.diesel_stock -= liters
@@ -146,4 +149,5 @@ def fuel_transaction_create(request):
             print("Received Fuel Transaction:")
             print(serializer.data)
             return Response({'message': 'FuelPurchased'}, status=status.HTTP_201_CREATED)
+        print("Is Serializer error")
         return Response({'error': 'Mainerror Occured'}, status=status.HTTP_400_BAD_REQUEST)
