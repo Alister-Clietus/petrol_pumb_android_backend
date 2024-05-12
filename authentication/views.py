@@ -35,7 +35,10 @@ def authenticate_user(request):
         password = request.data.get('password')
         user = User.objects.get(username=username)
         if(password==user.password):
-            return Response({'message': 'successful'}, status=status.HTTP_200_OK)
+            if username == 'archa' or username == 'admin':
+                return Response({'message': 'adminsuccessful'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'failed'}, status=status.HTTP_401_UNAUTHORIZED)
     except User.DoesNotExist:
